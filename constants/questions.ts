@@ -109,102 +109,157 @@ export const QUESTIONS: Question[] = [
     type: 'not_phishing',
     explanation: 'Este é um uso legítimo de um QR code. A chave é verificar se o URL para o qual ele te direciona é o esperado e corresponde ao site oficial do estabelecimento.'
   },
-  // FIX: Explicitly set the return type of the map callback to 'Question' to prevent TypeScript from incorrectly widening the 'type' property to a generic 'string'.
-  ...Array.from({ length: 40 }).map((_, i): Question => {
-    const id = i + 11;
-    const isPhishing = Math.random() > 0.4;
-    if(isPhishing) {
-        const phishingTypes = [
-            {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " Banco Online <alerta@online-banco-seguranca.com>"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Atividade Incomum na sua Conta"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Detectamos uma transferência suspeita de R$1.500. Se não foi você, cancele imediatamente clicando aqui. Você tem 1 hora antes que a transferência seja finalizada."),
-                    React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Cancelar Transferência")
-                ),
-                explanation: 'Phishing. Domínio falso e senso de urgência são táticas clássicas. Bancos pedem que você acesse sua conta diretamente pelo site ou app oficial, nunca por links em e-mails.'
-            },
-            {
-                scenario: React.createElement("div", { className: "text-base p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg border border-blue-200 dark:border-blue-700/50" },
-                    React.createElement("p", { className: "font-bold" }, "SMS de \"Correios\":"),
-                    React.createElement("p", null, "Sua encomenda não pode ser entregue devido a uma taxa de alfândega de R$3,50. Pague aqui para liberar a entrega: ", React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline break-all" }, "correios-taxa.info"))
-                ),
-                explanation: 'Phishing (smishing). Embora a taxa seja pequena (para parecer inofensiva), o objetivo é roubar os detalhes do seu cartão de crédito. O site não é o oficial dos Correios.'
-            },
-            {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " Amigo (conta de e-mail hackeada)"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Veja isso!"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Oi, você precisa ver esse vídeo, é hilário!"),
-                    React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline break-all" }, "http://funny-videos-online.ru/video.mov")
-                ),
-                explanation: 'Phishing. E-mails de contas comprometidas são comuns. O link para um domínio russo (.ru) é altamente suspeito e provavelmente leva a um malware.'
-            },
-            {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " LinkedIn <jobs@linkedin-notifications.com>"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Você apareceu em 4 buscas esta semana"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Recrutadores estão procurando por candidatos como você. Veja quem te procurou e se candidate a vagas recomendadas."),
-                    React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Ver Buscas")
-                ),
-                explanation: 'Phishing. Domínio quase perfeito, mas "linkedin-notifications.com" não é o oficial. A grafia correta é crucial. O objetivo é roubar suas credenciais do LinkedIn.'
-            }
-        ];
-        const selected = phishingTypes[id % phishingTypes.length];
-        return {
-            id,
-            scenario: selected.scenario,
-            type: 'phishing',
-            explanation: selected.explanation
-        }
-    } else {
-        const notPhishingTypes = [
-            {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " Amazon.com.br <order-update@amazon.com.br>"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Seu pedido Amazon.com.br de \"Fone de Ouvido\" foi enviado"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Olá [Seu Nome],"),
-                    React.createElement("p", null, "Boas notícias! Seu pedido foi enviado. Você pode rastreá-lo aqui: [link de rastreamento oficial]")
-                ),
-                explanation: 'Não é phishing. O e-mail é personalizado com seu nome, o domínio é o oficial da Amazon Brasil e se refere a uma compra que você provavelmente fez. '
-            },
-            {
-                scenario: React.createElement("div", { className: "text-base p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg border border-blue-200 dark:border-blue-700/50" },
-                    React.createElement("p", { className: "font-bold" }, "SMS da sua clínica:"),
-                    React.createElement("p", null, "Lembrete de consulta: Você tem uma consulta com Dr. Silva amanhã, 14/10, às 10:30. Responda SIM para confirmar ou LIGUE para [número da clínica] para reagendar.")
-                ),
-                explanation: 'Não é phishing. Mensagens de lembrete de consulta são um serviço comum e legítimo. Não há links suspeitos, e a instrução é responder ou ligar para um número conhecido.'
-            },
-             {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " newsletter@bancointer.com.br"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Novidades da semana e dicas de investimento"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Confira as últimas atualizações do mercado financeiro e veja nossas dicas para fazer seu dinheiro render mais. [Links para o blog oficial do banco].")
-                ),
-                explanation: 'Não é phishing. Este é um boletim informativo (newsletter) de um domínio legítimo. Ele não pede informações pessoais nem cria um senso de urgência.'
-            },
-            {
-                scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " do-not-reply@steampowered.com"),
-                    React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Sua Recibo da Steam"),
-                    React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
-                    React.createElement("p", null, "Obrigado por sua recente compra na Steam. Seu recibo está abaixo. [Detalhes da compra].")
-                ),
-                explanation: 'Não é phishing. O domínio "steampowered.com" é o oficial da Steam. Este é um e-mail transacional padrão enviado após uma compra.'
-            }
-        ];
-        const selected = notPhishingTypes[id % notPhishingTypes.length];
-        return {
-            id,
-            scenario: selected.scenario,
-            type: 'not_phishing',
-            explanation: selected.explanation
-        }
-    }
-  })
+  {
+    id: 11,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " recursos.humanos@empresa-famosa.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Oportunidade de Emprego Urgente"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Vimos seu perfil no LinkedIn e ficamos impressionados. Temos uma vaga de gerente com salário competitivo. Clique no link para se candidatar e ver os detalhes. As vagas são limitadas."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline break-all" }, "http://empresa-famosa-careers.net/apply")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. O link usa um domínio que não é o oficial da empresa. Ofertas de emprego que pressionam por uma candidatura rápida devem ser vistas com cautela.'
+  },
+  {
+    id: 12,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "Mensagem no WhatsApp:"),
+      React.createElement("p", null, "Olá! Sou o [Seu Nome] do futuro. Apenas um lembrete amigável de que você é incrível. Continue assim!")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. Embora seja uma mensagem estranha, não há links maliciosos ou pedidos de informação. É inofensiva.'
+  },
+  {
+    id: 13,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " cloud-storage@mail.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Seu armazenamento está cheio"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Seu armazenamento em nuvem está quase cheio. Para evitar a perda de arquivos, faça upgrade agora e ganhe 50% de desconto. A oferta termina hoje."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Fazer Upgrade Agora")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. O remetente é genérico e não menciona o provedor de nuvem (Google Drive, Dropbox, etc.). A urgência e o desconto são táticas para fazer você clicar sem pensar.'
+  },
+  {
+    id: 14,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg border border-blue-200 dark:border-blue-700/50" },
+      React.createElement("p", { className: "font-bold" }, "SMS de um amigo:"),
+      React.createElement("p", null, "Ei, me empresta 50 reais? Te pago amanhã. Minha conta está bloqueada. Pix: [chave aleatória]")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. Este é um golpe comum. O número do seu amigo pode ter sido clonado ou roubado. Sempre confirme por outro meio (ligação) antes de fazer qualquer transferência.'
+  },
+  {
+    id: 15,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "Notificação do Instagram:"),
+      React.createElement("p", null, "Alguém tentou fazer login na sua conta de um dispositivo desconhecido. Se não foi você, altere sua senha.")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. Esta é uma notificação de segurança legítima. É importante não clicar em links, mas ir diretamente ao aplicativo ou site para alterar a senha.'
+  },
+  {
+    id: 16,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " suporte@uber.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Problema com sua última viagem"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Houve um problema com o pagamento da sua última viagem. Por favor, atualize seus dados de pagamento para continuar usando nossos serviços."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Atualizar Pagamento")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. Embora o e-mail pareça legítimo, a Uber geralmente resolve problemas de pagamento através do aplicativo, não por e-mail. É mais seguro verificar o app.'
+  },
+  {
+    id: 17,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "QR Code em um panfleto de evento:"),
+      React.createElement("p", null, "Escaneie para comprar ingressos. O QR leva ao site oficial do evento, com informações claras e opções de pagamento seguras.")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. O QR code leva ao site oficial, o que é um uso seguro. Sempre verifique o domínio para garantir que é o correto.'
+  },
+  {
+    id: 18,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " servico-cliente@amazon-br.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Seu pedido foi cancelado"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Seu pedido de um novo smartphone foi cancelado. Se você não fez isso, sua conta pode estar comprometida. Clique para verificar sua conta."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Verificar Conta")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. O domínio do remetente é falso ("amazon-br.com" em vez de "amazon.com.br"). A mensagem cria pânico para que você clique sem verificar.'
+  },
+  {
+    id: 19,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg border border-blue-200 dark:border-blue-700/50" },
+      React.createElement("p", { className: "font-bold" }, "SMS de sua operadora:"),
+      React.createElement("p", null, "Parabéns! Você foi selecionado para receber um upgrade gratuito para nosso plano 5G. Clique no link para ativar."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline break-all" }, "http://bit.ly/upgrade-5g-gratis")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. O link encurtado esconde o destino real. As operadoras geralmente fazem upgrades através de canais oficiais, como o aplicativo ou o site.'
+  },
+  {
+    id: 20,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "E-mail de confirmação de voo:"),
+      React.createElement("p", null, "Sua reserva de voo para o Rio de Janeiro está confirmada. O e-mail contém todos os detalhes da viagem e um link para o site da companhia aérea para fazer o check-in.")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. E-mails de confirmação são comuns e, desde que o link leve ao site oficial, são seguros.'
+  },
+  {
+    id: 21,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " segurança@banco-digital.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Verificação de segurança necessária"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Para cumprir novas regulamentações, precisamos que você confirme seus dados. Anexamos um formulário seguro. Baixe, preencha e nos envie de volta."),
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. Bancos nunca pedem para você baixar e preencher formulários com dados sensíveis. A verificação é sempre feita no ambiente seguro do site ou aplicativo.'
+  },
+  {
+    id: 22,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "Pop-up no seu navegador:"),
+      React.createElement("p", null, "Este site usa cookies para melhorar sua experiência. [Botão: Aceitar]")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. Este é um aviso de cookies padrão e exigido por lei em muitas regiões. É seguro aceitar em sites confiáveis.'
+  },
+  {
+    id: 23,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-blue-100 dark:bg-blue-900/50 rounded-lg border border-blue-200 dark:border-blue-700/50" },
+      React.createElement("p", { className: "font-bold" }, "QR Code em um estacionamento:"),
+      React.createElement("p", null, "Pague seu estacionamento escaneando o QR code. Ele te leva para uma página que pede os dados do seu cartão de crédito, mas o site não tem HTTPS e o design é suspeito.")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. Golpes com QR code em estacionamentos são cada vez mais comuns. A falta de HTTPS é um grande sinal de que o site não é seguro para inserir dados de pagamento.'
+  },
+  {
+    id: 24,
+    scenario: React.createElement("div", { className: "text-base font-mono p-4 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700" },
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "De:"), " noreply@discord.com"),
+      React.createElement("p", null, React.createElement("span", { className: "font-bold" }, "Assunto:"), " Você recebeu um presente: 1 mês de Nitro!"),
+      React.createElement("hr", { className: "my-2 border-gray-200 dark:border-gray-600" }),
+      React.createElement("p", null, "Um amigo te deu um mês de Discord Nitro! Clique no botão abaixo para resgatar. Você precisará fazer login para ativar."),
+      React.createElement("a", { href: "#", onClick: (e: React.MouseEvent) => e.preventDefault(), className: "text-blue-600 dark:text-blue-400 underline" }, "Resgatar Nitro")
+    ),
+    type: 'phishing',
+    explanation: 'Phishing. Embora o e-mail pareça oficial, este é um golpe comum no Discord. O link leva a uma página de login falsa para roubar suas credenciais.'
+  },
+  {
+    id: 25,
+    scenario: React.createElement("div", { className: "text-base p-4 bg-green-100 dark:bg-green-900/50 rounded-lg border border-green-200 dark:border-green-700/50" },
+      React.createElement("p", { className: "font-bold" }, "Mensagem de um bot no Telegram:"),
+      React.createElement("p", null, "Lembrete: sua assinatura do serviço de streaming de música expira em 3 dias. Acesse o site oficial para renovar.")
+    ),
+    type: 'not_phishing',
+    explanation: 'Não é phishing. Desde que o bot não forneça um link direto e apenas o lembre de ir ao site oficial, a mensagem é segura.'
+  }
 ];
