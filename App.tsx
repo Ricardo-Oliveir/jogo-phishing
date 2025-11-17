@@ -38,7 +38,12 @@ const App: React.FC = () => {
   const level = useMemo(() => Math.floor(currentQuestionIndex / 10) + 1, [currentQuestionIndex]);
   
   const shuffleArray = <T,>(array: T[]): T[] => {
-    return [...array].sort(() => Math.random() - 0.5);
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
   };
 
   const startGame = useCallback(() => {
